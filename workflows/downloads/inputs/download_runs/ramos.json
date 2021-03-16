@@ -1,0 +1,9 @@
+{
+  "download_runs.runs": [
+      "ERR3276430"
+    ],
+  "download_runs.samples_folder": "/data/samples/AIRR-Seq/",
+  "download_runs.aspera_download": true,
+  "download_runs.skip_technical": false,
+  "download_runs.original_names": true
+}

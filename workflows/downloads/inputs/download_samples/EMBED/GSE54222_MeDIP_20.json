@@ -1,0 +1,29 @@
+{
+  "download_samples.experiments": [
+    "GSM1310414",
+    "GSM1310415",
+    "GSM1310416",
+    "GSM1310417",
+    "GSM1310418",
+    "GSM1310419",
+    "GSM1310420",
+    "GSM1310421",
+    "GSM1310422",
+    "GSM1310423",
+    "GSM1310424",
+    "GSM1310425",
+    "GSM1310426",
+    "GSM1310427",
+    "GSM1310428",
+    "GSM1310429",
+    "GSM1310430",
+    "GSM1310431",
+    "GSM1310432",
+    "GSM1310433",
+    "GSM1310434"
+  ],
+  "download_samples.samples_folder": "/data/samples/EMBED",
+  "download_samples.copy_cleaned": true,
+  "download_samples.copy_extracted": true
+}
+
