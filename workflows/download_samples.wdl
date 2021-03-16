@@ -1,7 +1,7 @@
 version development
 
-import  "download_runs.wdl" as downloader
-import "extract_run.wdl" as extractor
+import  "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/workflows/download_runs.wdl" as downloader
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/workflows/extract_run.wdl" as extractor
 
 workflow download_samples
 {

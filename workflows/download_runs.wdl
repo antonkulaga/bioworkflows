@@ -1,6 +1,6 @@
 version development
 
-import "extract_run.wdl" as extractor
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/workflows/extract_run.wdl" as extractor
 
 workflow download_runs{
     input {
