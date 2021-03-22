@@ -61,7 +61,7 @@ workflow download_runs{
 
 
     output {
-        Array[Array[CleanedRun]] out = download_run.out
+        Array[CleanedRun] out = flatten(download_run.out)
     }
 
 

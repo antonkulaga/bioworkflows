@@ -1,11 +1,11 @@
 version development
 
-# production configuration
+# production version
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/common/files.wdl" as files
 import  "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/download_runs.wdl" as downloader
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/extract_run.wdl" as extractor
 
-# local pathes (uncomment for debugging:)
-#import "download_run.wdl" as extractor #uncomment for debugging
+#local debug version (uncomment for debugging and comment the production version)
+#import "../common/files.wdl" as files
 #import  "download_runs.wdl" as downloader
 
 
@@ -35,7 +35,7 @@ workflow download_samples
         String series_folder = samples_folder + "/" + series
         String experiment_folder = series_folder + "/" + experiment
 
-        call extractor.copy as copy_metadata{
+        call files.copy as copy_metadata{
             input:
                 destination = experiment_folder,
                 files = [get_experiment_metadata.experiment_json, get_experiment_metadata.runs_tsv]

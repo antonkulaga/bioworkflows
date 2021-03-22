@@ -1,13 +1,12 @@
 version development
 
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/download_runs.wdl" as downloader
-
-
 # production configuration
-#import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/align/align_reads.wdl" as aligner
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/download_runs.wdl" as downloader
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/align/align_reads.wdl" as aligner
 
 # debug local configuration (uncomment for debugging)
-import "align_reads.wdl" as aligner
+#import  "../download/download_runs.wdl" as downloader
+#import "align_reads.wdl" as aligner
 
 
 workflow align_runs {
@@ -26,6 +25,7 @@ workflow align_runs {
         Boolean aspera_download = true
         Boolean skip_technical = true
         Boolean original_names = false
+        String sequence_aligner = "minimap2"
     }
 
     call downloader.download_runs as download_runs{
@@ -38,24 +38,28 @@ workflow align_runs {
             copy_cleaned = copy_cleaned,
             aspera_download = aspera_download,
             skip_technical = skip_technical,
-            original_names = original_names
+            original_names = original_names,
+            copy_extracted = copy_extracted,
+
 
     }
-
-    scatter(run in download_runs.out) {
+    Array[CleanedRun] cleaned_runs =  download_runs.out
+    scatter(run in cleaned_runs) {
+        String name = run.run
         call aligner.align_reads as align_reads{
             input:
                     reads = run.cleaned_reads,
                     reference = reference,
-                    name = run.name,
+                    run = name,
                     max_memory_gb = max_memory_gb,
                     align_threads = align_threads,
                     sort_threads = sort_threads,
-                    destination = run.folder + "/" + "aligned"
+                    destination = run.folder + "/" + "aligned",
+                    aligner = sequence_aligner
         }
     }
 
     output {
-        Array[Array[AlignedRun]] out = align_reads.out
+        #Array[Array[AlignedRun]] out = align_reads.out
     }
 }
