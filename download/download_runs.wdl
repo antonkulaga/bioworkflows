@@ -1,6 +1,7 @@
 version development
 
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/workflows/extract_run.wdl" as extractor
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/extract_run.wdl" as extractor
+#import "extract_run.wdl" as extractor #uncomment for debugging
 
 workflow download_runs{
     input {
