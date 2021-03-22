@@ -5,7 +5,7 @@ import  "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/downloa
 import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/extract_run.wdl" as extractor
 
 # local pathes (uncomment for debugging:)
-#import "extract_run.wdl" as extractor #uncomment for debugging
+#import "download_run.wdl" as extractor #uncomment for debugging
 #import  "download_runs.wdl" as downloader
 
 

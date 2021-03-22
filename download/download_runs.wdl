@@ -1,7 +1,11 @@
 version development
 
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/extract_run.wdl" as extractor
-#import "extract_run.wdl" as extractor #uncomment for debugging
+
+# production configuration
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/download_run.wdl" as downloader
+
+# debug local configuration (uncomment for debugging)
+#import "download_run.wdl" as downloader
 
 workflow download_runs{
     input {
@@ -39,7 +43,7 @@ workflow download_runs{
             String sra_folder = samples_folder + "/" + bioproject + "/" + experiment + "/" + run
 
 
-            call extractor.extract_run as extract_run{
+            call downloader.download_run as download_run{
                 input:
                     layout = layout,
                     run =  run,
@@ -57,7 +61,7 @@ workflow download_runs{
 
 
     output {
-        Array[Array[ExtractedRun]] out = extract_run.out
+        Array[Array[CleanedRun]] out = download_run.out
     }
 
 

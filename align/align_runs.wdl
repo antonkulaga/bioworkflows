@@ -1,7 +1,13 @@
 version development
 
 import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/download_runs.wdl" as downloader
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/align/align_run.wdl" as aligner
+
+
+# production configuration
+#import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/align/align_reads.wdl" as aligner
+
+# debug local configuration (uncomment for debugging)
+import "align_reads.wdl" as aligner
 
 
 workflow align_runs {
@@ -35,19 +41,21 @@ workflow align_runs {
             original_names = original_names
 
     }
-    Array[Array[ExtractedRun]] downloaded = download_runs.out
 
-    scatter(run in downloaded) {
-        Array[File] reads =  run.cleaned_reads
-        call aligner.align{
+    scatter(run in download_runs.out) {
+        call aligner.align_reads as align_reads{
             input:
-                    reads = reads,
+                    reads = run.cleaned_reads,
                     reference = reference,
                     name = run.name,
                     max_memory_gb = max_memory_gb,
                     align_threads = align_threads,
                     sort_threads = sort_threads,
-                    destination = run.folder / "aligned"
+                    destination = run.folder + "/" + "aligned"
         }
+    }
+
+    output {
+        Array[Array[AlignedRun]] out = align_reads.out
     }
 }

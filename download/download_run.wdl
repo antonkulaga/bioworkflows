@@ -1,14 +1,12 @@
 version development
 
-struct ExtractedRun {
-    String run
-    String folder
-    Boolean is_paired
-    Array[File] cleaned_reads
-    Array[File] report
-}
+# production version
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/quality/clean_reads.wdl" as cleaner
 
-workflow extract_run{
+#local debug version (uncomment for debugging and comment production version)
+#import "../quality/clean_reads.wdl" as cleaner
+
+workflow download_run{
     input {
         String layout
         String run
@@ -23,23 +21,10 @@ workflow extract_run{
 
     call download { input: sra = run, aspera_download = aspera_download }
     call extract {input: sra = download.out, is_paired = is_paired, threads = extract_threads, skip_technical = skip_technical, original_names = original_names}
-    call fastp { input: reads = extract.out, is_paired = is_paired }
-    call copy as copy_report {
-     input:
-        destination = folder + "/report",
-        files = [fastp.report_json, fastp.report_html]
-    }
-    if(copy_cleaned)
-    {
-        call copy as copy_cleaned_reads {
-         input:
-            destination = folder + "/reads",
-            files = fastp.reads_cleaned
-        }
-    }
+    call cleaner.clean_reads as clean_reads { input: run = run, folder = folder, reads = extract.out, copy_cleaned = copy_cleaned, is_paired = is_paired}
 
     output {
-        ExtractedRun out = object {run: run, folder: folder, is_paired: is_paired, cleaned_reads: fastp.reads_cleaned, report: copy_report.out}
+        CleanedRun out = clean_reads.out
     }
 }
 
@@ -97,55 +82,4 @@ task extract {
         Array[File] out = glob(prefix+"*")
         #Array[File] out = if(is_paired) then [prefix + "_1.fastq",  prefix + "_2.fastq"] else [prefix + ".fastq"]
      }
-}
-
-
-task fastp {
-    input {
-        Array[File] reads
-        Boolean is_paired
-    }
-
-    command {
-        fastp --cut_front --cut_tail --cut_right --trim_poly_g --trim_poly_x --overrepresentation_analysis \
-            -i ~{reads[0]} -o ~{basename(reads[0], ".fastq.gz")}_cleaned.fastq.gz \
-            ~{if( is_paired ) then "--detect_adapter_for_pe " + "--correction -I "+reads[1]+" -O " + basename(reads[1], ".fastq.gz") +"_cleaned.fastq.gz" else ""}
-    }
-
-    runtime {
-        docker: "quay.io/biocontainers/fastp@sha256:56ca79fc827c1e9f48120cfa5adb654c029904d8e0b75d01d5f86fdd9b567bc5" #0.20.1--h8b12597_0
-    }
-
-    output {
-        File report_json = "fastp.json"
-        File report_html = "fastp.html"
-        Array[File] reads_cleaned = if( is_paired )
-            then [basename(reads[0], ".fastq.gz") + "_cleaned.fastq.gz", basename(reads[1], ".fastq.gz") + "_cleaned.fastq.gz"]
-            else [basename(reads[0], ".fastq.gz") + "_cleaned.fastq.gz"]
-    }
-}
-
-
-task copy {
-    input {
-        Array[File] files
-        String destination
-    }
-
-    String where = sub(destination, ";", "_")
-
-    command {
-        mkdir -p ~{where}
-        cp -L -R -u ~{sep=' ' files} ~{where}
-        declare -a files=(~{sep=' ' files})
-        for i in ~{"$"+"{files[@]}"};
-          do
-              value=$(basename ~{"$"}i)
-              echo ~{where}/~{"$"}value
-          done
-    }
-
-    output {
-        Array[File] out = read_lines(stdout())
-    }
 }

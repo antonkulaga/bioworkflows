@@ -1,38 +1,58 @@
 version development
 
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/download/extract_run.wdl" as extractor
+# production version
+import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/common/files.wdl" as files
 
-workflow align_run {
+#local debug version (uncomment for debugging and comment the production version)
+#import "../common/files.wdl" as files
+
+struct AlignedRun {
+    String run
+    String folder
+    Boolean is_paired
+    File bam
+    File bai
+    String aligner
+}
+
+workflow align_reads {
 
     input {
         Array[File] reads
         File reference
-        String name
+        String run
         Int max_memory_gb = 42
         Int align_threads = 12
         Int sort_threads = 12
+        Int gb_per_thread = 3
         String destination
+        String aligner = "minimap2"
     }
 
     call minimap2 {
         input:
             reads = reads,
             reference = reference,
-            name = name,
+            name = run,
             threads = align_threads,
             max_memory = max_memory_gb
     }
 
     call sambamba_sort {
         input:
-            bam = minimap2.bam,
-            threads = sort_threads
+            unsorted_bam = minimap2.bam,
+            threads = sort_threads,
+            gb_per_thread = gb_per_thread
     }
 
-    call extractor.copy as copy_sorted_bam{
+    call files.copy as copy_sorted_bam{
         input:
             destination = destination,
-            files = [sambamba_sort.out, sambamba_sort.bai]
+            files = [sambamba_sort.sorted_bam, sambamba_sort.sorted_bai]
+    }
+
+    output {
+       AlignedRun out = object {run: run, folder: destination, bam: copy_sorted_bam.out[0], bai: copy_sorted_bam.out[1], aligner: aligner}
     }
 }
 
@@ -65,16 +85,16 @@ task minimap2 {
 
 task sambamba_sort{
     input {
-        File bam
+        File unsorted_bam
         Int threads
         Int gb_per_thread = 3
     }
 
-    String name = basename(bam, ".bam")
+    String name = basename(unsorted_bam, ".bam")
 
     command {
-        ln -s ~{bam} ~{basename(bam)}
-        sambamba sort -m ~{gb_per_thread}G -t ~{threads} -p ~{basename(bam)}
+        ln -s ~{unsorted_bam} ~{basename(unsorted_bam)}
+        sambamba sort -m ~{gb_per_thread}G -t ~{threads} -p ~{basename(unsorted_bam)}
     }
 
     runtime {
@@ -86,7 +106,7 @@ task sambamba_sort{
     }
 
     output {
-        File out = name + ".sorted.bam"
-        File bai = name + ".sorted.bam.bai"
+        File sorted_bam = name + ".sorted.bam"
+        File sorted_bai = name + ".sorted.bam.bai"
     }
 }
