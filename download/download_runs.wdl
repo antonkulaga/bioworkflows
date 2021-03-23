@@ -11,7 +11,7 @@ workflow download_runs{
     input {
         String title = ""
         Array[String] runs
-        String samples_folder
+        String experiment_folder
         String key = "0a1d74f32382b8a154acacc3a024bdce3709"
         Int extract_threads = 12
         Boolean copy_extracted = true
@@ -40,7 +40,7 @@ workflow download_runs{
             String experiment = info["Experiment"]
             String organism = info["ScientificName"]
 
-            String sra_folder = samples_folder + "/" + bioproject + "/" + experiment + "/" + run
+            String sra_folder = experiment_folder + "/" + bioproject + "/" + experiment + "/" + run
 
 
             call downloader.download_run as download_run{

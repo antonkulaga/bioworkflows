@@ -50,7 +50,7 @@ workflow download_samples
             input:
                 title = title,
                 runs = sras,
-                samples_folder = experiment_folder,
+                experiment_folder = experiment_folder,
                 key = key,
                 extract_threads = extract_threads,
                 copy_cleaned = copy_cleaned,
