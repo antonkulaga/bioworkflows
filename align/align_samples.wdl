@@ -65,6 +65,7 @@ workflow align_samples {
                 align_threads = align_threads,
                 sort_threads = sort_threads,
                 copy_cleaned = copy_cleaned,
+                copy_extracted = copy_extracted,
                 aspera_download = aspera_download,
                 skip_technical = skip_technical,
                 original_names = original_names,

@@ -1,0 +1,17 @@
+{
+  "align_samples.title": "Twin pair B (control, case) MEDIP-Seq",
+  "align_samples.sort_threads": 12,
+  "align_samples.original_names": false,
+  "align_samples.experiment_package": false,
+  "align_samples.experiments": ["GSM1313981", "GSM1313982"],
+  "align_samples.samples_folder": "/data/samples/EMBED",
+  "align_samples.reference": "/data/ensembl/103/species/Homo_sapiens/Homo_sapiens.GRCh38.dna.primary_assembly.fa",
+  "align_samples.copy_cleaned": true,
+  "align_samples.copy_extracted": true,
+  "align_samples.sequence_aligner": "minimap2",
+  "align_samples.extract_threads": 12,
+  "align_samples.align_threads": 12,
+  "align_samples.skip_technical": true,
+  "align_samples.aspera_download": true,
+  "align_samples.max_memory_gb": 42
+}
