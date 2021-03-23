@@ -60,6 +60,6 @@ workflow align_runs {
     }
 
     output {
-        #Array[Array[AlignedRun]] out = align_reads.out
+        Array[AlignedRun] out = align_reads.out
     }
 }

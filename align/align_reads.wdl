@@ -9,7 +9,6 @@ import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/common/f
 struct AlignedRun {
     String run
     String folder
-    Boolean is_paired
     File bam
     File bai
     String aligner
