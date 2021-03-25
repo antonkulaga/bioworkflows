@@ -23,6 +23,7 @@ workflow download_samples
         Boolean aspera_download = true
         Boolean skip_technical = true
         Boolean original_names = false
+        Boolean deep_folder_structure = false
 }
     scatter(experiment in experiments) {
         String experiment_title = if(title=="") then "" else  experiment + " - " + title
@@ -56,7 +57,8 @@ workflow download_samples
                 copy_cleaned = copy_cleaned,
                 aspera_download = aspera_download,
                 skip_technical = skip_technical,
-                original_names = original_names
+                original_names = original_names,
+                deep_folder_structure = deep_folder_structure
 
         }
     }

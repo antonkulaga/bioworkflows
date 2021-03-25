@@ -23,3 +23,17 @@ task copy {
         Array[File] out = read_lines(stdout())
     }
 }
+
+
+task merge {
+    input {
+        Array[File] files
+        String output_name = ""
+    }
+
+    command {
+        cat ~{sep=' ' files} > ~{if(output_name=="") then "merged" else output_name}
+    }
+
+    output { File out = output_name }
+}

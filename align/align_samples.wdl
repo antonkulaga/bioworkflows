@@ -23,6 +23,7 @@ workflow align_samples {
         Boolean aspera_download = true
         Boolean skip_technical = true
         Boolean original_names = false
+        Boolean deep_folder_structure = false
 
         File reference
         Int max_memory_gb = 42
@@ -53,7 +54,7 @@ workflow align_samples {
             String sras = row[2]
         }
 
-        call runs_aligner.align_runs{
+        call runs_aligner.align_runs as align_runs{
             input:
                 title = title,
                 runs = sras,
@@ -71,6 +72,10 @@ workflow align_samples {
                 original_names = original_names,
                 sequence_aligner = sequence_aligner
         }
+    }
+
+    output {
+        Array[AlignedRun] out = flatten(align_runs.out)
     }
 
 }

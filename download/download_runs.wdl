@@ -19,6 +19,7 @@ workflow download_runs{
         Boolean aspera_download = true
         Boolean skip_technical = true
         Boolean original_names = false
+        Boolean deep_folder_structure = true
     }
 
     scatter(run in runs) {
@@ -40,7 +41,7 @@ workflow download_runs{
             String experiment = info["Experiment"]
             String organism = info["ScientificName"]
 
-            String sra_folder = experiment_folder + "/" + bioproject + "/" + experiment + "/" + run
+            String sra_folder = if(deep_folder_structure) then experiment_folder + "/" + bioproject + "/" + experiment + "/" + run else run
 
 
             call downloader.download_run as download_run{

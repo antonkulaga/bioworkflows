@@ -26,6 +26,7 @@ workflow align_runs {
         Boolean skip_technical = true
         Boolean original_names = false
         String sequence_aligner = "minimap2"
+        Boolean deep_folder_structure = true
     }
 
     call downloader.download_runs as download_runs{
