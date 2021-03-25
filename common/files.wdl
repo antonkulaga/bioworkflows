@@ -28,11 +28,11 @@ task copy {
 task merge {
     input {
         Array[File] files
-        String output_name = ""
+        String output_name
     }
 
     command {
-        cat ~{sep=' ' files} > ~{if(output_name=="") then "merged" else output_name}
+        cat ~{sep=' ' files} > ~{output_name}
     }
 
     output { File out = output_name }
