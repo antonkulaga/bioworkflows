@@ -27,6 +27,8 @@ workflow align_runs {
         Boolean original_names = false
         String sequence_aligner = "minimap2"
         Boolean deep_folder_structure = true
+        Boolean markdup = false
+        Int compression = 9
     }
 
     call downloader.download_runs as download_runs{
@@ -56,7 +58,9 @@ workflow align_runs {
                     align_threads = align_threads,
                     sort_threads = sort_threads,
                     destination = run.folder + "/" + "aligned",
-                    aligner = sequence_aligner
+                    aligner = sequence_aligner,
+                    markdup = markdup,
+                    compression = compression
         }
     }
 

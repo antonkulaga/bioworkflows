@@ -11,6 +11,7 @@ struct AlignedRun {
     String folder
     File bam
     File bai
+    File flagstat
     String aligner
 }
 
@@ -24,8 +25,11 @@ workflow align_reads {
         Int align_threads = 12
         Int sort_threads = 12
         Int gb_per_thread = 3
+        Boolean markdup = false
         String destination
         String aligner = "minimap2"
+        Boolean markdup = false
+        Int compression = 9
     }
 
     call minimap2 {
@@ -41,17 +45,19 @@ workflow align_reads {
         input:
             unsorted_bam = minimap2.bam,
             threads = sort_threads,
-            gb_per_thread = gb_per_thread
+            gb_per_thread = gb_per_thread,
+            markdup = markdup,
+            compression = compression
     }
 
     call files.copy as copy_sorted_bam{
         input:
             destination = destination,
-            files = [sambamba_sort.sorted_bam, sambamba_sort.sorted_bai]
+            files = [sambamba_sort.sorted_bam, sambamba_sort.sorted_bai, sambamba_sort.flagstat]
     }
 
     output {
-       AlignedRun out = object {run: run, folder: destination, bam: copy_sorted_bam.out[0], bai: copy_sorted_bam.out[1], aligner: aligner}
+       AlignedRun out = object {run: run, folder: destination, bam: copy_sorted_bam.out[0], bai: copy_sorted_bam.out[1], bai: copy_sorted_bam.out[2], aligner: aligner}
     }
 }
 
@@ -82,18 +88,23 @@ task minimap2 {
     }
 }
 
-task sambamba_sort{
+task sambamba_sort {
     input {
         File unsorted_bam
         Int threads
         Int gb_per_thread = 3
+        Int compression = 9
+        Boolean markdup = false
     }
 
     String name = basename(unsorted_bam, ".bam")
+    String suffix = if(markdup) then ".sorted_markdup.bam" else ".sorted.bam"
 
     command {
         ln -s ~{unsorted_bam} ~{basename(unsorted_bam)}
-        sambamba sort -m ~{gb_per_thread}G -t ~{threads} -p ~{basename(unsorted_bam)}
+        sambamba sort -l ~{compression} -m ~{gb_per_thread}G -t ~{threads} -p ~{basename(unsorted_bam)}
+        ~{if(markdup) then "sambamba markdup -t " + threads + " -l " + compression +" -p " + name + ".sorted.bam " + name + suffix else ""}
+        sambamba flagstat -t ~{threads} -p ~{name + suffix} > ~{name + suffix + ".flagstat"}
     }
 
     runtime {
@@ -105,7 +116,8 @@ task sambamba_sort{
     }
 
     output {
-        File sorted_bam = name + ".sorted.bam"
-        File sorted_bai = name + ".sorted.bam.bai"
+        File sorted_bam = name + suffix
+        File sorted_bai = name + suffix + ".bai"
+        File flagstat = name + suffix + "flagstat"
     }
 }

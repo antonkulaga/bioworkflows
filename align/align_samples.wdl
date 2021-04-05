@@ -30,6 +30,8 @@ workflow align_samples {
         Int align_threads = 12
         Int sort_threads = 12
         String sequence_aligner = "minimap2"
+        Boolean markdup = false
+        Int compression = 9
 
 }
     scatter(experiment in experiments) {
@@ -70,7 +72,9 @@ workflow align_samples {
                 aspera_download = aspera_download,
                 skip_technical = skip_technical,
                 original_names = original_names,
-                sequence_aligner = sequence_aligner
+                sequence_aligner = sequence_aligner,
+                markdup = markdup,
+                compression = compression
         }
     }
 
