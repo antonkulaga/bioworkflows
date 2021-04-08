@@ -57,7 +57,7 @@ workflow align_reads {
     }
 
     output {
-       AlignedRun out = object {run: run, folder: destination, bam: copy_sorted_bam.out[0], bai: copy_sorted_bam.out[1], bai: copy_sorted_bam.out[2], aligner: aligner}
+       AlignedRun out = object {run: run, folder: destination, bam: copy_sorted_bam.out[0], bai: copy_sorted_bam.out[1], flagstat: copy_sorted_bam.out[2], aligner: aligner}
     }
 }
 
