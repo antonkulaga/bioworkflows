@@ -118,6 +118,6 @@ task sambamba_sort {
     output {
         File sorted_bam = name + suffix
         File sorted_bai = name + suffix + ".bai"
-        File flagstat = name + suffix + "flagstat"
+        File flagstat = name + suffix + ".flagstat"
     }
 }
