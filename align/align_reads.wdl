@@ -123,7 +123,7 @@ task bwa_mem2 {
     command {
         ln -s ~{reference} ~{ref_name}
         ~{if(has_index) then "ln -s " + reference_index + " " + basename(select_first([reference_index])) else "bwa-mem2 index " +  ref_name}
-        bwa-mem2 mem -R '@RG\tID:~{name}' -ax sr  -t ~{threads} -2 ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+        bwa-mem2 mem -R '@RG\tID:~{name}' -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
     }
 
     runtime {

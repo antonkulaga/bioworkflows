@@ -1,0 +1,16 @@
+{
+  "align_runs.copy_cleaned": true,
+  "align_runs.reference": "/data/ensembl/103/species/Homo_sapiens/Homo_sapiens.GRCh38.dna.primary_assembly.fa",
+  "align_runs.reference_index": "/data/indexes/bwa-mem2/Homo_sapiens",
+  "align_runs.experiment_folder": "/data/samples/EMBED/bwa_mem2",
+  "align_runs.title": "Twin pair A",
+  "align_runs.align_reads.gb_per_thread": 3,
+  "align_runs.max_memory_gb": 42,
+  "align_runs.sequence_aligner": "bwa-mem2",
+  "align_runs.sort_threads": 12,
+  "align_runs.copy_extracted": true,
+  "align_runs.extract_threads": 12,
+  "align_runs.skip_technical": true,
+  "align_runs.runs": ["SRR1142023","SRR1142024"],
+  "align_runs.align_threads": 12
+}
