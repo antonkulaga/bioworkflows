@@ -26,6 +26,7 @@ workflow align_samples {
         Boolean deep_folder_structure = false
 
         File reference
+        File? reference_index
         Int max_memory_gb = 42
         Int align_threads = 12
         Int sort_threads = 12
@@ -62,6 +63,7 @@ workflow align_samples {
                 runs = sras,
                 experiment_folder = experiment_folder,
                 reference = reference,
+                reference_index = reference_index,
                 key = key,
                 extract_threads = extract_threads,
                 max_memory_gb = max_memory_gb,

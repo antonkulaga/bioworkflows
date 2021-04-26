@@ -15,6 +15,7 @@ workflow align_runs {
         Array[String] runs
         String experiment_folder
         File reference
+        File? reference_index
         String key = "0a1d74f32382b8a154acacc3a024bdce3709"
         Int extract_threads = 12
         Int max_memory_gb = 42
@@ -53,6 +54,7 @@ workflow align_runs {
             input:
                     reads = run.cleaned_reads,
                     reference = reference,
+                    reference_index = reference_index,
                     run = name,
                     max_memory_gb = max_memory_gb,
                     align_threads = align_threads,

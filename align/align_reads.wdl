@@ -20,6 +20,7 @@ workflow align_reads {
     input {
         Array[File] reads
         File reference
+        File? reference_index #if no index is provided that computes it inplace
         String run
         Int max_memory_gb = 42
         Int align_threads = 12
@@ -32,18 +33,35 @@ workflow align_reads {
         Int compression = 9
     }
 
-    call minimap2 {
-        input:
-            reads = reads,
-            reference = reference,
-            name = run,
-            threads = align_threads,
-            max_memory = max_memory_gb
+    Boolean is_bwa = (aligner == "bwa_mem2" || aligner == "bwa-mem2")
+
+    if(aligner == "minimap2") {
+        call minimap2 {
+            input:
+                reads = reads,
+                reference = reference,
+                name = run,
+                threads = align_threads,
+                max_memory = max_memory_gb
+        }
     }
+    if(is_bwa) {
+           call bwa_mem2 {
+               input:
+                    reads = reads,
+                    reference = reference,
+                    reference_index = reference_index,
+                    name = run,
+                    threads = align_threads,
+                    max_memory = max_memory_gb
+           }
+     }
+
+    File unsorted_bam = select_first([if(is_bwa) then bwa_mem2.bam else minimap2.bam])
 
     call sambamba_sort {
         input:
-            unsorted_bam = minimap2.bam,
+            unsorted_bam = unsorted_bam,
             threads = sort_threads,
             gb_per_thread = gb_per_thread,
             markdup = markdup,
@@ -87,6 +105,39 @@ task minimap2 {
         File bam = name + ".bam"
     }
 }
+
+
+task bwa_mem2 {
+    input {
+        Array[File] reads
+        File reference
+        File? reference_index
+        String name
+        Int threads
+        Int max_memory
+    }
+
+    String ref_name = basename(reference)
+    Boolean has_index = defined(reference_index)
+
+    command {
+        ln -s ~{reference} ~{ref_name}
+        ~{if(has_index) then "ln -s " + reference_index + " " + basename(select_first([reference_index])) else "bwa-mem2 index " +  ref_name}
+        bwa-mem2 mem -R '@RG\tID:~{name}' -ax sr  -t ~{threads} -2 ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+    }
+
+    runtime {
+        docker_memory: "~{max_memory}G"
+        docker_cpu: "~{threads+1}"
+        docker: "quay.io/comp-bio-aging/bwa-mem2:latest"
+        maxRetries: 2
+    }
+
+    output {
+        File bam = name + ".bam"
+    }
+}
+
 
 task sambamba_sort {
     input {

@@ -1,0 +1,4 @@
+{
+  "bwa_mem2_index.reference": "/data/ensembl/103/species/Homo_sapiens/Homo_sapiens.GRCh38.dna.primary_assembly.fa",
+  "bwa_mem2_index.destination": "/data/indexes/bwa-mem2/Homo_sapiens"
+}
