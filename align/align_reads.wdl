@@ -31,6 +31,7 @@ workflow align_reads {
         String aligner = "minimap2"
         Boolean markdup = false
         Int compression = 9
+        Boolean readgroup = true
     }
 
     Boolean is_bwa = (aligner == "bwa_mem2" || aligner == "bwa-mem2")
@@ -42,7 +43,8 @@ workflow align_reads {
                 reference = reference,
                 name = run,
                 threads = align_threads,
-                max_memory = max_memory_gb
+                max_memory = max_memory_gb,
+                readgroup = readgroup
         }
     }
     if(is_bwa) {
@@ -53,7 +55,8 @@ workflow align_reads {
                     reference_index = reference_index,
                     name = run,
                     threads = align_threads,
-                    max_memory = max_memory_gb
+                    max_memory = max_memory_gb,
+                    readgroup = readgroup
            }
      }
 
@@ -86,12 +89,13 @@ task minimap2 {
         String name
         Int threads
         Int max_memory
+        Boolean readgroup = true
     }
 
     #TODO for readgroups investigate https://angus.readthedocs.io/en/2017/Read_group_info.html
 
     command {
-        minimap2 -R '@RG\tID:~{name}' -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+        minimap2 ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
     }
 
     runtime {
@@ -115,6 +119,7 @@ task bwa_mem2 {
         String name
         Int threads
         Int max_memory
+        Boolean readgroup = true
     }
 
     String ref_name = basename(reference)
@@ -123,7 +128,7 @@ task bwa_mem2 {
     command {
         ln -s ~{reference} ~{ref_name}
         ~{if(has_index) then "ln -s " + reference_index + " " + basename(select_first([reference_index])) else "bwa-mem2 index " +  ref_name}
-        bwa-mem2 mem -R '@RG\tID:~{name}' -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+        bwa-mem2 mem ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
     }
 
     runtime {

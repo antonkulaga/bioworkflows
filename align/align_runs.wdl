@@ -30,6 +30,7 @@ workflow align_runs {
         Boolean deep_folder_structure = true
         Boolean markdup = false
         Int compression = 9
+        Boolean readgroup = true
     }
 
     call downloader.download_runs as download_runs{
@@ -62,7 +63,8 @@ workflow align_runs {
                     destination = run.folder + "/" + "aligned",
                     aligner = sequence_aligner,
                     markdup = markdup,
-                    compression = compression
+                    compression = compression,
+                    readgroup = readgroup
         }
     }
 

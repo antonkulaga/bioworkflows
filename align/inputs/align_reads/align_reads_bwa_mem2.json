@@ -1,0 +1,16 @@
+{
+  "align_reads.reference" : "/data/ensembl/103/species/Homo_sapiens/Homo_sapiens.GRCh38.dna.primary_assembly.fa",
+  "align_reads.gb_per_thread" : 3,
+  "align_reads.markdup" : false,
+  "align_reads.reference_index" : "/data/indexes/bwa-mem2/Homo_sapiens",
+  "align_reads.compression" : 9,
+  "align_reads.run" : "SRR1142023",
+  "align_reads.sort_threads" : 12,
+  "align_reads.max_memory_gb" : 42,
+  "align_reads.aligner" : "bwa-mem2",
+  "align_reads.align_threads" : 12,
+  "align_reads.reads" : [
+    "/data/cromwell-executions/align_runs/e17926d3-4739-4e65-af9d-5ad5d93f27ac/call-download_runs/download_runs/f8436dce-c883-46a3-a0d1-f0b4850fc443/call-ScatterAt34_17/shard-0/ScatterAt34_17/3f5f132e-e8ad-4a37-b615-121de5c9051d/call-download_run/shard-0/download_run/93a94c84-8b55-4248-b99b-7755a65cefb7/call-clean_reads/clean_reads/f5fd468d-aa53-4863-b77f-5ccde73fee82/call-fastp/execution/SRR1142023.fastq_cleaned.fastq.gz"
+  ],
+  "align_reads.destination" : "/data/samples/EMBED/bwa_mem2/PRJNA236349/SRX448174/SRR1142023/aligned"
+}
