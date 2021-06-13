@@ -44,7 +44,8 @@ workflow align_reads {
                 name = run,
                 threads = align_threads,
                 max_memory = max_memory_gb,
-                readgroup = readgroup
+                readgroup = readgroup,
+                compression = compression
         }
     }
     if(is_bwa) {
@@ -56,7 +57,8 @@ workflow align_reads {
                     name = run,
                     threads = align_threads,
                     max_memory = max_memory_gb,
-                    readgroup = readgroup
+                    readgroup = readgroup,
+                    compression = compression
            }
      }
 
@@ -89,13 +91,15 @@ task minimap2 {
         String name
         Int threads
         Int max_memory
+        Int compression = 9
         Boolean readgroup = true
     }
 
     #TODO for readgroups investigate https://angus.readthedocs.io/en/2017/Read_group_info.html
 
     command {
-        minimap2 ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+        minimap2 ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} \
+        | sambamba view -t ~{threads} -l ~{compression} -S -f bam -o ~{name}.bam /dev/stdin
     }
 
     runtime {
@@ -119,6 +123,7 @@ task bwa_mem2 {
         String name
         Int threads
         Int max_memory
+        Int compression = 9
         Boolean readgroup = true
     }
 
@@ -128,7 +133,8 @@ task bwa_mem2 {
     command {
         ln -s ~{reference} ~{ref_name}
         ~{if(has_index) then "ln -s " + reference_index + " " + basename(select_first([reference_index])) else "bwa-mem2 index " +  ref_name}
-        bwa-mem2 mem ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} | samtools view -bS - > ~{name}.bam
+        bwa-mem2 mem ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} \
+        | sambamba view -t ~{threads} -l ~{compression} -S -f bam -o ~{name}.bam /dev/stdin
     }
 
     runtime {
