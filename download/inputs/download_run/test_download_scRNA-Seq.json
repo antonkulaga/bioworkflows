@@ -1,0 +1,10 @@
+{
+  "download_run.extract_threads" : 12,
+  "download_run.original_names" : false,
+  "download_run.run" : "SAMN09881339",
+  "download_run.copy_cleaned" : true,
+  "download_run.skip_technical" : true,
+  "download_run.folder" : "/data/samples/AIRR-Seq/reconstructions/RA/scRNA-Seq/R26cit/PRJNA487301/SRX4656515/SAMN09881339",
+  "download_run.aspera_download" : true,
+  "download_run.layout" : "PAIRED"
+}

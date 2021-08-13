@@ -1,0 +1,18 @@
+{
+  "download_samples.experiments": [
+    "GSM1679432",
+    "GSM1679433",
+    "GSM1679434",
+    "GSM1679435",
+    "GSM1679436",
+    "GSM1679437",
+    "GSM1679438",
+    "GSM1679439",
+    "GSM1679440",
+    "GSM1679441"
+  ],
+  "download_samples.samples_folder": "/data/samples/EMBED",
+  "download_samples.copy_cleaned": true,
+  "download_samples.copy_extracted": true
+}
+

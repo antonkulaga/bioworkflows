@@ -1,0 +1,5 @@
+{
+  "vsearch_index.db": "/data/indexes/imgt/human/constant/imgt_human_IGHC.fasta",
+  "vsearch_index.indexes_folder": "/data/indexes/vsearch",
+  "vsearch_index.name": "IGHC"
+}

@@ -45,10 +45,10 @@ workflow align_runs {
             skip_technical = skip_technical,
             original_names = original_names,
             copy_extracted = copy_extracted,
-
-
     }
+
     Array[CleanedRun] cleaned_runs =  download_runs.out
+
     scatter(run in cleaned_runs) {
         String name = run.run
         call aligner.align_reads as align_reads{

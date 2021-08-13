@@ -1,0 +1,8 @@
+{
+  "demultiplex.barcodes": "/data/samples/AIRR-Seq/OURS/S3987Nr2/barcodes.fasta",
+  "demultiplex.reads": [
+    "/data/samples/AIRR-Seq/OURS/S3987Nr2/01_fastq/S3987Nr2.1.fastq.gz",
+    "/data/samples/AIRR-Seq/OURS/S3987Nr2/01_fastq/S3987Nr2.2.fastq.gz"
+  ],
+  "demultiplex.destination": "/data/samples/AIRR-Seq/OURS/S3987Nr2/demultiplexed"
+}
