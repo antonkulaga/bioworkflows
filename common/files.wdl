@@ -21,6 +21,7 @@ task copy {
 
     output {
         Array[File] out = read_lines(stdout())
+        File destination_folder = destination
     }
 }
 
