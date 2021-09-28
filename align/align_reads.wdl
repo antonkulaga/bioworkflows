@@ -28,7 +28,7 @@ workflow align_reads {
         Int gb_per_thread = 3
         Boolean markdup = false
         String destination
-        String aligner = "minimap2"
+        String aligner = "bwa-mem2"
         Boolean markdup = false
         Int compression = 9
         Boolean readgroup = true
@@ -170,7 +170,7 @@ task sambamba_sort {
     }
 
     runtime {
-        docker: "quay.io/biocontainers/sambamba:0.8.0--h984e79f_0"
+        docker: "quay.io/biocontainers/sambamba:0.8.1--h41abebc_0"
         maxRetries: 1
         docker_memory: "~{gb_per_thread * (threads+1)}G"
         docker_cpu: "~{threads+1}"

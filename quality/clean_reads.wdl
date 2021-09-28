@@ -57,7 +57,7 @@ task fastp {
     }
 
     runtime {
-        docker: "quay.io/biocontainers/fastp@sha256:56ca79fc827c1e9f48120cfa5adb654c029904d8e0b75d01d5f86fdd9b567bc5" #0.20.1--h8b12597_0
+        docker: "quay.io/biocontainers/fastp:0.22.0--h2e03b76_0"
     }
 
     output {

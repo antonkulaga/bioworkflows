@@ -47,7 +47,7 @@
 "GSM1314023",
 "GSM1314024"
 ],
-"download_samples.samples_folder": "/data/samples/EMBED",
+"download_samples.samples_folder": "/data/samples/AIRR-Seq/RA/PRJNA561156",
 "download_samples.copy_cleaned": true,
 "download_samples.copy_extracted": true
 }
