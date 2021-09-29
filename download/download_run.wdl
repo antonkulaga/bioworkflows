@@ -1,7 +1,5 @@
 version development
 
-import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/common/files.wdl" as files
-
 # production version
 import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/quality/clean_reads.wdl" as cleaner
 
@@ -25,16 +23,12 @@ workflow download_run{
     call download { input: sra = run, aspera_download = aspera_download }
     call extract {input: sra = download.out, is_paired = is_paired, threads = extract_threads, skip_technical = skip_technical, original_names = original_names}
 
-    if(copy_extracted)
-    {
-        call files.copy as copy_extracted_reads {
-            input:
-                destination = folder + "/" + "extracted_reads",
-                files = extract.out
-        }
+    call cleaner.clean_reads as clean_reads { input: run = run,
+                                                  folder = folder,
+                                                  reads = extract.out,
+                                                  copy_cleaned = copy_cleaned,
+                                                  is_paired = is_paired, copy_original = copy_extracted
     }
-
-    call cleaner.clean_reads as clean_reads { input: run = run, folder = folder, reads = extract.out, copy_cleaned = copy_cleaned, is_paired = is_paired}
 
     output {
         CleanedRun out = clean_reads.out

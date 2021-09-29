@@ -13,6 +13,7 @@ struct CleanedRun {
     Boolean is_paired
     Array[File] cleaned_reads
     Array[File] report
+    Array[File] original_reads
 }
 
 workflow clean_reads {
@@ -21,6 +22,7 @@ workflow clean_reads {
         Boolean is_paired
         String folder
         Boolean copy_cleaned
+        Boolean copy_original = false
         String run = "" #sequencing run id (optional)
     }
 
@@ -34,13 +36,26 @@ workflow clean_reads {
     {
         call files.copy as copy_cleaned_reads {
             input:
-                destination = folder + "/reads",
+                destination = folder + "/" + "reads",
+                files = fastp.reads_cleaned
+        }
+    }
+    if(copy_original){
+        call files.copy as copy_original_reads {
+            input:
+                destination = folder + "/" + "original_reads",
                 files = fastp.reads_cleaned
         }
     }
 
     output {
-        CleanedRun out = object {run: run, folder: folder, is_paired: is_paired, cleaned_reads: fastp.reads_cleaned, report: copy_report.out}
+        CleanedRun out = object {run: run,
+                             folder: folder,
+                             is_paired: is_paired,
+                             cleaned_reads: fastp.reads_cleaned,
+                             report: copy_report.out,
+                             original_reads: reads
+                         }
     }
 }
 
