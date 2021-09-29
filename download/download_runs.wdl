@@ -53,7 +53,8 @@ workflow download_runs{
                     extract_threads = extract_threads,
                     aspera_download = aspera_download,
                     skip_technical = skip_technical,
-                    original_names = original_names
+                    original_names = original_names,
+                    copy_extracted = copy_extracted
             }
         }
 
