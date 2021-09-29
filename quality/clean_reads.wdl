@@ -32,18 +32,20 @@ workflow clean_reads {
             destination = folder + "/report",
             files = [fastp.report_json, fastp.report_html]
     }
+
+    if(copy_original){
+        call files.copy as copy_original_reads {
+            input:
+                destination = folder + "/" + "original_reads",
+                files = reads
+        }
+    }
+
     if(copy_cleaned)
     {
         call files.copy as copy_cleaned_reads {
             input:
                 destination = folder + "/" + "reads",
-                files = fastp.reads_cleaned
-        }
-    }
-    if(copy_original){
-        call files.copy as copy_original_reads {
-            input:
-                destination = folder + "/" + "original_reads",
                 files = fastp.reads_cleaned
         }
     }
