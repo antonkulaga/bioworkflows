@@ -12,6 +12,7 @@ workflow download_run{
         String run
         String folder
         Boolean copy_cleaned = false
+        Boolean copy_extracted = false
         Int extract_threads = 4
         Boolean aspera_download = true
         Boolean skip_technical = true
@@ -21,10 +22,21 @@ workflow download_run{
 
     call download { input: sra = run, aspera_download = aspera_download }
     call extract {input: sra = download.out, is_paired = is_paired, threads = extract_threads, skip_technical = skip_technical, original_names = original_names}
+
+    if(copy_extracted)
+    {
+        call files.copy as copy_extracted_reads {
+            input:
+                destination = folder + "/" + "extracted_reads",
+                files = extract.out
+        }
+    }
+
     call cleaner.clean_reads as clean_reads { input: run = run, folder = folder, reads = extract.out, copy_cleaned = copy_cleaned, is_paired = is_paired}
 
     output {
         CleanedRun out = clean_reads.out
+        Array[File] extracted_reads = extract.out
     }
 }
 
