@@ -1,0 +1,9 @@
+{
+  "Diamond_Blast.mode": "blastp",
+  "Diamond_Blast.query": "/data/samples/AIRR-Seq/OURS/S5205Nr1/translations/patient_n2_auto_translations.fasta",
+  "Diamond_Blast.threads": 12,
+  "Diamond_Blast.result_name": "patient_n2_auto",
+  "Diamond_Blast.output_format": "6",
+  "Diamond_Blast.db": "/data/samples/AIRR-Seq/abYsis_RF/diamond/abYsis_RF.dmnd",
+  "Diamond_Blast.results_folder": "/data/samples/AIRR-Seq/OURS/S5205Nr1/diamond/"
+}
