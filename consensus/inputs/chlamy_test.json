@@ -1,0 +1,5 @@
+{
+  "consensus.bam": "/data/samples/test/alignment/chlamy/a2-1_eigf_bw/a2-1_eigf_bw_run.sorted.bam",
+  "consensus.reference_fasta": "/data/ensembl/109/species/Chlamydomonas_reinhardtii_v5.5/Chlamydomonas_reinhardtii_v5.5.fa",
+  "consensus.destination": "/data/samples/test/alignment/chlamy/a2-1_eigf_bw/consensus"
+}

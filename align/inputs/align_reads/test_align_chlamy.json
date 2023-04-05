@@ -1,0 +1,17 @@
+{
+  "align_reads.reference" : "/data/ensembl/109/species/Chlamydomonas_reinhardtii_v5.5/Chlamydomonas_reinhardtii_v5.5.fa",
+  "align_reads.gb_per_thread" : 3,
+  "align_reads.markdup" : false,
+  "align_reads.reference_index" : "/data/indexes/bwa-mem2/Chlamydomonas_reinhardtii",
+  "align_reads.compression" : 9,
+  "align_reads.run" : "a2-1_eigf_bw_run",
+  "align_reads.sort_threads" : 12,
+  "align_reads.max_memory_gb" : 42,
+  "align_reads.aligner" : "bwa-mem2",
+  "align_reads.align_threads" : 12,
+  "align_reads.reads" : [
+    "/data/sources/integration_sequencing_simulation/data/out/a2-1_eigf_bw/sim_reads/cond1.rep11.fq",
+    "/data/sources/integration_sequencing_simulation/data/out/a2-1_eigf_bw/sim_reads/cond1.rep12.fq"
+  ],
+  "align_reads.destination" : "/data/samples/test/alignment/chlamy/a2-1_eigf_bw"
+}

@@ -1,0 +1,4 @@
+{
+  "bwa_mem2_index.reference": "/data/ensembl/109/species/Chlamydomonas_reinhardtii_v5.5/Chlamydomonas_reinhardtii_v5.5.fa",
+  "bwa_mem2_index.destination": "/data/indexes/bwa-mem2/Chlamydomonas_reinhardtii"
+}

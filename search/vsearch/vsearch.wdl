@@ -22,7 +22,7 @@ input{
         identity = identity
     }
 
-  call copy as copy_results {
+  call files.copy as copy_results {
     input:
         files = [global_search.out],
         destination = results_folder
