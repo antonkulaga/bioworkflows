@@ -1,7 +1,7 @@
 version development
 
 import "https://raw.githubusercontent.com/antonkulaga/bioworkflows/main/common/files.wdl" as files
-
+#NOT YET WORKING!!!
 workflow consensus
 {
     input {
@@ -32,7 +32,6 @@ task samtools_fastq {
         File reference_fasta
         File bam
         String name
-
     }
 
     command {
