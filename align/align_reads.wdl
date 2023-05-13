@@ -96,9 +96,9 @@ task minimap2 {
     }
 
     #TODO for readgroups investigate https://angus.readthedocs.io/en/2017/Read_group_info.html
-
+    String rg = "@RG\tID:~{name}\tLB:~{name}.WGS\tPL:ILLUMINA\tPU:NONE\tSM:~{name}"
     command {
-        minimap2 ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} \
+        minimap2 ~{if(readgroup) then "-R '~{rg}'" else ""} -ax sr  -t ~{threads} -2 ~{reference} ~{sep=' ' reads} \
         | sambamba view -t ~{threads} -l ~{compression} -S -f bam -o ~{name}.bam /dev/stdin
     }
 
@@ -129,11 +129,13 @@ task bwa_mem2 {
 
     String ref_name = basename(reference)
     Boolean has_index = defined(reference_index)
+    String rg = "@RG\tID:~{name}\tLB:~{name}.WGS\tPL:ILLUMINA\tPU:NONE\tSM:~{name}"
 
     command {
         ln -s ~{reference} ~{ref_name}
+        
         ~{if(has_index) then "ln -s " + reference_index + " " + basename(select_first([reference_index])) else "bwa-mem2 index " +  ref_name}
-        bwa-mem2 mem ~{if(readgroup) then "-R '@RG\tID:" +name +"'" else ""} -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} \
+        bwa-mem2 mem ~{if(readgroup) then "-R '~{rg}'" else ""} -t ~{threads} ~{if(has_index) then basename(select_first([reference_index]))+"/"+ ref_name else ref_name} ~{sep=' ' reads} \
         | sambamba view -t ~{threads} -l ~{compression} -S -f bam -o ~{name}.bam /dev/stdin
     }
 
